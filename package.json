@@ -1,0 +1,32 @@
+{
+  "name": "build-sprint-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "deploy": "npx @convex-dev/static-hosting deploy",
+    "check": "tsc --noEmit -p convex/tsconfig.json",
+    "test": "node scripts/check-core-flow.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@convex-dev/static-hosting": "^0.2.1",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/urbanist": "^5.3.0",
+    "convex": "^1.46.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "playwright-core": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  }
+}
