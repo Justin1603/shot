@@ -1,0 +1,1 @@
+5 Oct · Milestone 1 done: handover works on the live link in a phone-size browser. Decided: prompt wording is Codex's draft for now. Still broken: not tried on a real phone.
