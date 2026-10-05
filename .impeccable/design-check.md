@@ -1,0 +1,9 @@
+# SHOT implementation design check
+
+Checked 2026-10-05 against the incumbent, user-supplied DESIGN.md and PRODUCT.md, the confirmed milestone in shot-surface.md, and src/App.jsx, src/styles.css, src/prompts.js, and src/main.jsx. This is an existing-system extension; no identity or document migration was performed. DESIGN.md and PRODUCT.md were not edited by this check.
+
+Evidence: both prescribed font families are imported locally and assigned to their prescribed display and functional roles. Cream (#FFFDF7), soft black (#171717), and all six mode colours match. Cards use flat 16px corners; actions and navigation use pills. Home contains the exact headline, six specified mode names/descriptions, and solid SVG icons. The deck uses five prompts per mode, vertical scrolling, 80% cards with next-card exposure, numerical progress, and direct card-to-Show interaction. Show Mode uses the selected mode colour, a secondary top-left close control, no browsing context or handoff instruction, and two identically styled full-width responses. Results return to cream and soft black, show the prescribed reaction messages and Done, and end at Home. Expansion lasts 300ms and respects reduced motion.
+
+Scope differences are intentional: the broader source documents mention Premium, analytics, and favorites; the confirmed milestone excludes them. Disabled Saved and Profile items are expressly permitted by DESIGN.md. PRODUCT.md still contains the older handoff instruction, while DESIGN.md and the confirmed milestone explicitly omit it. These source-document differences were preserved rather than rewritten.
+
+Responsive prompt sizing reaches below the nominal short/medium ranges on narrow phones (48px/36px minimums); DESIGN.md permits responsive refinement. No additional system changes were made. Browser verification belongs to the build thread; this check inspected implementation evidence only.

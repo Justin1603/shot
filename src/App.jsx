@@ -12,6 +12,7 @@ function Icon({ name, className = '' }) {
     home: 'M1 11 12 1l11 10h-3v11h-6v-7h-4v7H4V11H1Z',
     saved: 'M5 2h14v21l-7-5-7 5V2Z',
     profile: 'M12 1a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM3 23v-3a9 9 0 0 1 18 0v3H3Z',
+    back: 'm10 3 2 2-5.5 5.5H23v3H6.5L12 19l-2 2L1 12l9-9Z',
   };
   return <svg aria-hidden="true" className={`icon ${className}`} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d={paths[name]} /></svg>;
 }
@@ -128,7 +129,7 @@ export default function App() {
           </button>)}
         </div>
       </main> : <main className="deck-page" style={{ '--mode-color': mode.color }}>
-        <header className="deck-header"><button className="back-button" onClick={home} aria-label="Back to intentions">←</button><h1 ref={heading} tabIndex={-1}>{mode.name}</h1></header>
+        <header className="deck-header"><button className="back-button" onClick={home} aria-label="Back to intentions"><Icon name="back" /></button><h1 ref={heading} tabIndex={-1}>{mode.name}</h1></header>
         <div className="deck" ref={deck} aria-label={`${mode.name} prompts`} key={mode.id}>
           {mode.prompts.map((prompt, index) => <button key={prompt.text} className="prompt-card" onClick={(event) => openPrompt(prompt, event)} aria-label={`Show prompt ${index + 1}: ${prompt.text}`}>
             <div className="card-header"><span>{mode.name}</span><span>{index + 1} / 5</span></div>
