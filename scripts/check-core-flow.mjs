@@ -46,6 +46,17 @@ try {
       await page.getByRole('heading', { name: mode.name, exact: true }).waitFor();
       assert.ok(await card.isVisible(), 'Closing returns to the selected prompt');
     }
+    const premium = page.getByRole('region', { name: 'Premium preview', exact: true });
+    await premium.scrollIntoViewIfNeeded({ timeout: 5000 });
+    await premium.getByRole('heading', { name: "You've got more shots to take.", exact: true }).waitFor();
+    assert.equal(await premium.getByText('Unlock the full deck.', { exact: true }).count(), 1);
+    assert.ok(await premium.getByRole('button', { name: 'Unlock Premium', exact: true }).isDisabled(), 'Premium purchasing stays unavailable');
+    assert.equal(await page.getByRole('button', { name: /^Show prompt / }).count(), 5, 'Only five prompts can be opened');
+    if (!modeIndex) await screenshot('premium-mobile');
+    await premium.getByRole('button', { name: 'Maybe later', exact: true }).click();
+    const fifthCard = page.getByRole('button', { name: `Show prompt 5: ${mode.prompts[4].text}`, exact: true });
+    const fifthBounds = await fifthCard.boundingBox();
+    assert.ok(fifthBounds.y >= 0 && fifthBounds.y + fifthBounds.height <= 844, 'Maybe later returns to the fifth free prompt');
     // Scroll backward, then complete both possible answers.
     const firstCard = page.getByRole('button', { name: `Show prompt 1: ${mode.prompts[0].text}`, exact: true });
     for (const [answer, text] of [
@@ -69,6 +80,12 @@ try {
   await page.getByRole('button', { name: 'Back to intentions', exact: true }).click();
   await page.setViewportSize({ width: 320, height: 568 });
   await page.getByRole('button', { name: `${modes[4].name} ${modes[4].description}`, exact: true }).click();
+  const smallPremium = page.getByRole('region', { name: 'Premium preview', exact: true });
+  await smallPremium.evaluate((element) => element.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await screenshot('premium-small-phone');
+  await smallPremium.getByRole('button', { name: 'Maybe later', exact: true }).scrollIntoViewIfNeeded();
+  await screenshot('premium-small-phone-actions');
+  await smallPremium.getByRole('button', { name: 'Maybe later', exact: true }).click();
   await page.getByRole('button', { name: `Show prompt 1: ${modes[4].prompts[0].text}`, exact: true }).click();
   await page.getByRole('heading', { name: modes[4].prompts[0].text, exact: true }).waitFor();
   assert.ok(await page.getByRole('button', { name: 'NO THANKS', exact: true }).isVisible());
@@ -78,8 +95,11 @@ try {
   await page.getByRole('button', { name: 'Back to intentions', exact: true }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await screenshot('desktop');
+  await page.getByRole('button', { name: `${modes[0].name} ${modes[0].description}`, exact: true }).click();
+  await page.getByRole('region', { name: 'Premium preview', exact: true }).scrollIntoViewIfNeeded();
+  await screenshot('premium-desktop');
   assert.deepEqual(failures, [], 'No browser errors or failed assets');
-  console.log(`PASS ${url}: six intentions, all 30 prompts, close/back, both answers, Done, and small-phone layout.`);
+  console.log(`PASS ${url}: six intentions, all 30 free prompts, locked sixth previews, Maybe later, close/back, both answers, Done, and small-phone layout.`);
 } finally {
   await browser.close();
 }

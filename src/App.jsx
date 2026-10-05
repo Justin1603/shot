@@ -54,6 +54,22 @@ function typeSize(text) {
   return text.length < 30 ? 'short' : text.length < 65 ? 'medium' : 'long';
 }
 
+function PremiumPreview({ mode, onLater }) {
+  return <section className="premium-preview" aria-label="Premium preview">
+    <div className="premium-stack" aria-hidden="true">
+      <div className="premium-layer premium-layer-back" />
+      <div className="premium-layer premium-layer-middle" />
+      <div className="premium-layer premium-front"><p className="prompt-text long">{mode.premiumPrompt}</p></div>
+    </div>
+    <h2>You've got more shots to take.</h2>
+    <p className="premium-copy">Unlock the full deck.</p>
+    <div className="premium-actions">
+      <button className="pill premium-unlock" disabled title="Premium purchasing isn't available yet">Unlock Premium</button>
+      <button className="pill" onClick={onLater}>Maybe later</button>
+    </div>
+  </section>;
+}
+
 export default function App() {
   const [mode, setMode] = useState(null);
   const [selection, setSelection] = useState(null);
@@ -119,6 +135,13 @@ export default function App() {
     setAnswer(value);
   }
 
+  function returnToFreeDeck() {
+    const cards = deck.current?.querySelectorAll('.prompt-card');
+    const lastCard = cards?.[cards.length - 1];
+    lastCard?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    lastCard?.focus({ preventScroll: true });
+  }
+
   return <>
     <div className="shell" inert={hasOverlay} aria-hidden={hasOverlay || undefined}>
       {!mode ? <main className="home">
@@ -136,6 +159,7 @@ export default function App() {
             <p className={`prompt-text ${typeSize(prompt.text)}`}>{prompt.text}</p>
             <span className="tap-label">Tap to show</span>
           </button>)}
+          <PremiumPreview mode={mode} onLater={returnToFreeDeck} />
         </div>
       </main>}
       <Navigation onHome={home} />

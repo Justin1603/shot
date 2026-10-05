@@ -1,6 +1,6 @@
 # SHOT phone handoff
 
-Scope: this milestone only. Six intentions, five vertically browsable prompts per intention, Show Mode, two contextual answers, result, Done. No accounts, Premium, saved prompts, or analytics. Operate: one person chooses and another responds on the same phone.
+Scope: Six intentions, five vertically browsable free prompts per intention, a blurred sixth Premium preview, Show Mode, two contextual answers, result, Done. No accounts, Premium purchasing, saved prompts, or analytics. Operate: one person chooses and another responds on the same phone.
 
 ## Direction contract
 
@@ -17,3 +17,5 @@ FORM: Precisely specified flow from DESIGN.md; no concept seed or alternate comp
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 Confirmed: user said “follow DESIGN”; omit the handoff instruction. Prompts are authored for this build because no prompt library was supplied. Done returns Home. Full-screen means the webpage's available viewport; browser address controls remain under the phone browser's control.
+
+Premium preview extension: the user reported PRODUCT milestone 4 missing from the live app. Add the sixth position to every deck using DESIGN.md's blurred real prompt, two stacked cards, exact heading/supporting copy, disabled Unlock Premium and working Maybe later. The five free prompts remain unchanged; the sixth cannot enter Show Mode. Maybe later returns to the fifth free card. No purchase flow or pricing is introduced.

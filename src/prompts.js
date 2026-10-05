@@ -4,6 +4,7 @@ export const modes = [
   {
     id: 'move', name: 'Make a move', color: '#F25572', icon: 'heart',
     description: "Let them know you're interested.",
+    premiumPrompt: 'Want to turn this hello into a date?',
     prompts: [
       prompt('Coffee sometime?'),
       prompt('I was going to play it cool. Can I say hi instead?', 'YES, SAY HI'),
@@ -15,6 +16,7 @@ export const modes = [
   {
     id: 'flirt', name: 'Flirt a little', color: '#F29C55', icon: 'spark',
     description: 'Keep it playful without going all in.',
+    premiumPrompt: 'Would you like to be the reason I forget my opening line?',
     prompts: [
       prompt('Can I flirt a little?', 'YES, GO ON'),
       prompt('My best opening line is apparently a phone screen. Is it working?', 'YES, A LITTLE'),
@@ -26,6 +28,7 @@ export const modes = [
   {
     id: 'awkward', name: 'Break the awkwardness', color: '#55D5F2', icon: 'ice',
     description: 'Make the weird silence less weird.',
+    premiumPrompt: 'Want to give this awkward moment a better ending?',
     prompts: [
       prompt('Can we skip the awkward part?', 'YES, PLEASE'),
       prompt('I don’t know what to say. Can we start with hi?', 'YES, HI'),
@@ -37,6 +40,7 @@ export const modes = [
   {
     id: 'conversation', name: 'Start a conversation', color: '#55F28C', icon: 'wave',
     description: 'Find an easy way to say hi.',
+    premiumPrompt: 'Can we swap the story behind our last favourite photo?',
     prompts: [
       prompt('Got a minute for a hello?', 'YES, HI'),
       prompt('Want to tell me the best part of your day?', 'YES, LET’S TALK'),
@@ -48,6 +52,7 @@ export const modes = [
   {
     id: 'know', name: 'Get to know them', color: '#F2D055', icon: 'chat',
     description: 'Skip the small talk and learn something interesting.',
+    premiumPrompt: 'Want to tell me about a small adventure you would take again?',
     prompts: [
       prompt('Can I ask you something more interesting than “what do you do”?', 'YES, ASK AWAY'),
       prompt('Want to tell me something you could talk about for hours?', 'YES, LET’S TALK'),
@@ -59,6 +64,7 @@ export const modes = [
   {
     id: 'laugh', name: 'Make them laugh', color: '#D4AFFF', icon: 'smile',
     description: 'Start with something worth smiling about.',
+    premiumPrompt: 'Want to help me invent a much better origin story for this hello?',
     prompts: [
       prompt('Want to hear a truly terrible joke?', 'YES, LET’S HEAR IT'),
       prompt('My social skills are buffering. Can we try a hello?', 'YES, HI'),

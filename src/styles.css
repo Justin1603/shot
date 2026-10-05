@@ -44,6 +44,16 @@ h1:focus, .result h1:focus { outline: none; }
 .long { font-size: clamp(32px, 9vw, 40px); }
 .prompt-card .prompt-text { margin-top: auto; margin-bottom: auto; padding: 34px 0; }
 .tap-label { font-size: 16px; font-weight: 600; }
+.premium-preview { display: flex; flex-direction: column; flex: 0 0 auto; min-height: 100%; padding: 16px 8px 12px; scroll-snap-align: start; }
+.premium-stack { position: relative; height: 210px; flex-shrink: 0; margin-bottom: 24px; }
+.premium-layer { position: absolute; background: var(--mode-color); border-radius: 16px; }
+.premium-layer-back { inset: 0 28px 28px; opacity: .35; }
+.premium-layer-middle { inset: 14px 14px 14px; opacity: .65; }
+.premium-front { inset: 28px 0 0; display: flex; align-items: center; padding: 24px; overflow: hidden; }
+.premium-front .prompt-text { filter: blur(10px); user-select: none; pointer-events: none; }
+.premium-preview h2 { font-size: 30px; line-height: 1.1; text-wrap: balance; }
+.premium-copy { margin-top: 10px; font-size: 16px; line-height: 1.35; font-weight: 500; }
+.premium-actions { display: flex; flex-direction: column; gap: 12px; margin-top: auto; padding-top: 24px; }
 .presentation, .result { position: fixed; inset: 0; z-index: 5; overflow-y: auto; overscroll-behavior: contain; }
 .presentation { background: var(--mode-color); }
 .presentation-inner, .result-inner { max-width: 620px; min-height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: max(20px, env(safe-area-inset-top)) 28px max(28px, env(safe-area-inset-bottom)); }
@@ -51,6 +61,7 @@ h1:focus, .result h1:focus { outline: none; }
 .presentation .prompt-text { margin-top: 48px; margin-bottom: 56px; }
 .responses { display: flex; flex-direction: column; gap: 14px; margin-top: auto; }
 .pill { display: block; width: 100%; min-height: 62px; padding: 20px 24px; border-radius: 100px; background: var(--cream); color: var(--ink); font-size: 18px; font-weight: 700; line-height: 1.2; }
+.premium-unlock { background: var(--ink); color: var(--cream); }
 .result { background: var(--cream); }
 .result-inner { padding-top: max(100px, env(safe-area-inset-top)); }
 .result h1 { font-size: clamp(36px, 11vw, 48px); line-height: 1.1; margin-bottom: 64px; text-wrap: balance; }
