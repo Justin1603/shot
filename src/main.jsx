@@ -5,4 +5,8 @@ import '@fontsource-variable/urbanist';
 import './styles.css';
 import App from './App.jsx';
 
-createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
+const Surface = /^\/start\/?$/.test(window.location.pathname)
+  ? (await import('./StartPage.jsx')).default
+  : App;
+
+createRoot(document.getElementById('root')).render(<React.StrictMode><Surface /></React.StrictMode>);

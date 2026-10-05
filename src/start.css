@@ -1,0 +1,27 @@
+.start-page { max-width: 1120px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 28px max(32px, env(safe-area-inset-bottom)); }
+.start-page .start-header .wordmark { margin-bottom: 0; }
+.start-page .start-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 72px; margin-top: 72px; }
+.start-page .start-intro h1 { font-size: clamp(36px, 4.8vw, 56px); line-height: 1.08; text-wrap: balance; }
+.start-page .start-description { margin-top: 24px; font-size: 20px; line-height: 1.5; font-weight: 500; }
+.start-page .start-cta { display: flex; align-items: center; justify-content: center; min-height: 62px; width: 100%; margin-top: 32px; padding: 20px 24px; background: #171717; color: #FFFDF7; border-radius: 100px; font-size: 18px; font-weight: 700; line-height: 1.2; text-decoration: none; }
+.start-page .start-cta:focus-visible { outline: 3px solid #171717; outline-offset: 4px; }
+.start-page .start-cta:active { transform: scale(.985); }
+.start-page .start-note { margin-top: 14px; font-size: 14px; line-height: 1.4; text-align: center; font-weight: 500; }
+.start-page .start-example { margin: 0; }
+.start-page .start-example-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 490px; padding: 36px 28px 28px; border-radius: 16px; background: var(--example-color); }
+.start-page .start-example-prompt { font-family: 'Bricolage Grotesque Variable', sans-serif; font-size: clamp(48px, 4.5vw, 64px); font-weight: 700; letter-spacing: -.03em; line-height: 1.05; padding-bottom: 44px; }
+.start-page .start-example-answers { display: grid; gap: 12px; }
+.start-page .start-example-answers span { padding: 19px 24px; border-radius: 100px; background: #FFFDF7; color: #171717; text-align: center; font-size: 16px; line-height: 1.2; font-weight: 700; }
+.start-page .start-example figcaption { margin-top: 14px; text-align: center; font-size: 14px; line-height: 1.4; font-weight: 500; }
+.start-page .start-ending { margin-top: 68px; font-size: 16px; line-height: 1.4; font-weight: 500; }
+@media (hover: hover) { .start-page .start-cta:hover { filter: brightness(.9); } }
+@media (max-width: 700px) {
+  .start-page { max-width: 480px; padding-left: 24px; padding-right: 24px; }
+  .start-page .start-layout { grid-template-columns: minmax(0, 1fr); gap: 36px; margin-top: 40px; }
+  .start-page .start-intro h1 { font-size: clamp(32px, 9.3vw, 40px); }
+  .start-page .start-description { font-size: 18px; margin-top: 20px; }
+  .start-page .start-cta { margin-top: 24px; }
+  .start-page .start-example-card { min-height: 340px; padding-top: 28px; }
+  .start-page .start-example-prompt { font-size: clamp(40px, 13vw, 60px); }
+  .start-page .start-ending { margin-top: 36px; text-align: center; }
+}
