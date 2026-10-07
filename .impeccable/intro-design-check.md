@@ -1,0 +1,13 @@
+# SHOT intro extension design check
+
+Checked 2026-10-06: src/Intro.jsx, src/intro.css, src/EntryPage.jsx, .impeccable/intro-surface.md, the incumbent DESIGN.md guidance, and impeccable/reference/document.md. This is an ordinary extension within the established SHOT identity. Only this development report was written; no design-document rewrite or schema/sidecar migration was performed.
+
+Implementation evidence matches the five-screen contract: a 1.2-second automatic splash, followed by Attraction, Meeting someone new, Making conversation better, and Product reveal. The four walkthrough headings and supporting lines match the surface brief's supplied story. Next advances the first three content screens; Get started opens the existing App. Completion is a local browser preference, with a fallback that still opens App if browser storage is unavailable.
+
+The new screens retain cream (#FFFDF7), soft black (#171717), Bricolage Grotesque headings/wordmark, and Urbanist supporting copy and controls. Headings use 32px, reducing to 30px on small phones; the splash headline is 28px. Generous vertical spacing and full-width 62px pill controls inherit SHOT's airy editorial character. Entry motion lasts 300ms and runs only when reduced motion is not requested. New styling is scoped beneath .shot-intro, with its own named keyframes. No illustrations, reference colours, decorative icons, shadows, or shipping raster assets were introduced.
+
+The inspected git diff is empty for App.jsx, styles.css, prompts.js, StartPage.jsx, start.css, DESIGN.md, PRODUCT.md, PLAN.md, and PROGRESS.md. The existing app and /start files are preserved. First visits now pass through the approved entry wrapper; completed visits render the existing App directly.
+
+The build thread reports passing local build, core-flow, /start, and intro browser checks, with all three browser checks confirmed again. The fresh intro_finish_review returned disposition ship with no material fixes; all 15 screenshots covering splash and screens 1–4 at mobile, small-phone, and desktop sizes were valid, and fidelity matches/adaptations were recorded. This documentation pass inspected source evidence; it did not independently inspect screenshots or run the browser. Deployment failed with fetch failed / AggregateError EACCES because this session denied network access; the live app was not updated. The git checkpoint attempt was also blocked by index.lock Permission denied.
+
+Existing source-document differences remain untouched: PRODUCT.md contains the older handoff instruction, whereas DESIGN.md and the approved core flow omit it. The intro borrows only the approved reference spacing and heading size; it does not establish a replacement visual system.

@@ -8,6 +8,8 @@ assert.ok(executablePath, 'Chrome or Edge is needed for this browser check.');
 mkdirSync('.impeccable/review', { recursive: true });
 const browser = await chromium.launch({ executablePath, headless: true });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+// The landing-page check follows a visitor who has already completed the intro.
+await page.addInitScript(() => localStorage.setItem('shot.intro.complete.v1', '1'));
 const failures = [];
 page.on('pageerror', (error) => failures.push(error.message));
 page.on('response', (response) => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });

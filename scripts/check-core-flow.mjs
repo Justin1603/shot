@@ -13,6 +13,8 @@ mkdirSync('.impeccable/review', { recursive: true });
 const browser = await chromium.launch({ executablePath, headless: true });
 const failures = [];
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+// This check covers the existing handover flow for a returning visitor.
+await page.addInitScript(() => localStorage.setItem('shot.intro.complete.v1', '1'));
 page.on('pageerror', (error) => failures.push(error.message));
 page.on('response', (response) => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });
 const screenshot = (name) => page.screenshot({ path: `.impeccable/review/${name}.png`, fullPage: true, animations: 'disabled' });
