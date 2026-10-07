@@ -35,9 +35,17 @@ h1:focus, .result h1:focus { outline: none; }
 .deck-header h1 { font-size: 28px; line-height: 1.05; }
 .deck { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; scroll-snap-type: y mandatory; scrollbar-width: none; padding: 5px; margin: -5px; overscroll-behavior-y: contain; }
 .deck::-webkit-scrollbar { display: none; }
-.prompt-card { display: flex; flex-direction: column; text-align: left; width: 100%; min-height: 80%; flex: 0 0 80%; padding: 28px; background: var(--mode-color); border-radius: 16px; scroll-snap-align: start; }
+.prompt-card-wrap { position: relative; display: flex; min-height: 80%; flex: 0 0 80%; scroll-snap-align: start; }
+.prompt-card { display: flex; flex-direction: column; text-align: left; width: 100%; min-height: 100%; flex: 1; padding: 28px; background: var(--mode-color); border-radius: 16px; scroll-snap-align: start; }
 .card-header { display: flex; justify-content: space-between; align-items: start; gap: 12px; font-size: 14px; font-weight: 600; }
-.card-header span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card-header { min-height: 24px; padding-right: 44px; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.card-counter { font-size: 14px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.save-button { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 100px; background: transparent; }
+.saved-note { font-size: 14px; margin-bottom: 20px; }
+.saved-empty { font-size: 20px; line-height: 1.5; margin-top: 48px; }
+.save-error { padding: 16px 24px; line-height: 1.5; }
+.navigation button[aria-current="page"] { background: var(--ink); color: var(--cream); }
 .prompt-text { line-height: 1.05; overflow-wrap: break-word; text-wrap: pretty; }
 .short { font-size: clamp(48px, 14vw, 64px); }
 .medium { font-size: clamp(36px, 11vw, 48px); }
@@ -75,7 +83,7 @@ h1:focus, .result h1:focus { outline: none; }
   .presentation-inner { padding-left: 24px; padding-right: 24px; }
 }
 @media (max-height: 600px) {
-  .prompt-card { flex-basis: auto; min-height: 340px; }
+  .prompt-card-wrap { flex-basis: auto; min-height: 340px; }
   .presentation .prompt-text { margin-top: 20px; margin-bottom: 32px; }
   .result-inner { padding-top: 60px; }
 }

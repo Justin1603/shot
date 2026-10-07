@@ -17,10 +17,10 @@ function Icon({ name, className = '' }) {
   return <svg aria-hidden="true" className={`icon ${className}`} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d={paths[name]} /></svg>;
 }
 
-function Navigation({ onHome }) {
+function Navigation({ onHome, onSaved, savedPage }) {
   return <nav className="navigation" aria-label="Main navigation">
-    <button onClick={onHome} aria-label="Home"><Icon name="home" /><span>Home</span></button>
-    <button disabled title="Saved prompts are coming later"><Icon name="saved" /><span>Saved</span></button>
+    <button onClick={onHome} aria-label="Home" aria-current={!savedPage ? 'page' : undefined}><Icon name="home" /><span>Home</span></button>
+    <button onClick={onSaved} aria-current={savedPage ? 'page' : undefined}><Icon name="saved" /><span>Saved</span></button>
     <button disabled title="Profiles are coming later"><Icon name="profile" /><span>Profile</span></button>
   </nav>;
 }
@@ -54,6 +54,29 @@ function typeSize(text) {
   return text.length < 30 ? 'short' : text.length < 65 ? 'medium' : 'long';
 }
 
+const savedKey = 'shot.saved.prompts.v1';
+const promptKey = (mode, prompt) => JSON.stringify([mode.id, prompt.text]);
+
+function readSaved() {
+  try {
+    const value = JSON.parse(window.localStorage.getItem(savedKey) ?? '[]');
+    return Array.isArray(value) ? value.filter((key) => typeof key === 'string') : [];
+  } catch { return []; }
+}
+
+function PromptCard({ mode, prompt, index, saved, onToggle, onOpen }) {
+  return <div className="prompt-card-wrap" style={{ '--mode-color': mode.color }}>
+    <button className="prompt-card" onClick={(event) => onOpen(prompt, event, mode)} aria-label={`Show prompt ${index + 1}: ${prompt.text}`}>
+      <div className="card-header"><span>{mode.name}</span></div>
+      <p className={`prompt-text ${typeSize(prompt.text)}`}>{prompt.text}</p>
+      <div className="card-footer"><span className="tap-label">Tap to show</span><span className="card-counter">{index + 1} / 5</span></div>
+    </button>
+    <button className="save-button" aria-label={`${saved ? 'Unsave' : 'Save'} prompt: ${prompt.text}`} aria-pressed={saved} onClick={() => onToggle(mode, prompt)}>
+      <svg className="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5 3.8 12.4C-1 7.6 5.7 1 12 6.7c6.3-5.7 13 .9 8.2 5.7Z" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" /></svg>
+    </button>
+  </div>;
+}
+
 function PremiumPreview({ mode, onLater }) {
   return <section className="premium-preview" aria-label="Premium preview">
     <div className="premium-stack" aria-hidden="true">
@@ -62,9 +85,8 @@ function PremiumPreview({ mode, onLater }) {
       <div className="premium-layer premium-front"><p className="prompt-text long">{mode.premiumPrompt}</p></div>
     </div>
     <h2>You've got more shots to take.</h2>
-    <p className="premium-copy">Unlock the full deck.</p>
+    <p className="premium-copy">Premium · coming soon</p>
     <div className="premium-actions">
-      <button className="pill premium-unlock" disabled title="Premium purchasing isn't available yet">Unlock Premium</button>
       <button className="pill" onClick={onLater}>Maybe later</button>
     </div>
   </section>;
@@ -72,6 +94,9 @@ function PremiumPreview({ mode, onLater }) {
 
 export default function App() {
   const [mode, setMode] = useState(null);
+  const [savedPage, setSavedPage] = useState(false);
+  const [saved, setSaved] = useState(readSaved);
+  const [saveError, setSaveError] = useState('');
   const [selection, setSelection] = useState(null);
   const [answer, setAnswer] = useState(null);
   const deck = useRef(null);
@@ -89,9 +114,10 @@ export default function App() {
   useEffect(() => {
     const back = (event) => {
       setMode(modes.find((item) => item.id === event.state?.mode) ?? null);
+      setSavedPage(Boolean(event.state?.saved));
       setSelection(null);
       setAnswer(null);
-      if (selection && event.state?.mode) requestAnimationFrame(() => openedCard.current?.focus({ preventScroll: true }));
+      if (selection && (event.state?.mode || event.state?.saved)) requestAnimationFrame(() => openedCard.current?.focus({ preventScroll: true }));
     };
     const escape = (event) => {
       if (event.key === 'Escape' && selection) history.back();
@@ -102,26 +128,46 @@ export default function App() {
   }, [selection]);
 
   useEffect(() => {
-    if (mode && !hasOverlay) heading.current?.focus({ preventScroll: true });
+    if ((mode || savedPage) && !hasOverlay) heading.current?.focus({ preventScroll: true });
     if (answer) resultHeading.current?.focus({ preventScroll: true });
-  }, [mode, answer]);
+  }, [mode, savedPage, answer]);
 
   function home() {
     history.replaceState(null, '', location.pathname);
+    setSavedPage(false);
     setMode(null); setSelection(null); setAnswer(null);
     window.scrollTo(0, 0);
   }
 
   function chooseMode(item) {
     history.pushState({ mode: item.id }, '', location.pathname);
+    setSavedPage(false);
     setMode(item);
     window.scrollTo(0, 0);
   }
 
-  function openPrompt(prompt, event) {
+  function showSaved() {
+    history.pushState({ saved: true }, '', location.pathname);
+    setSavedPage(true); setMode(null); setSelection(null); setAnswer(null);
+    window.scrollTo(0, 0);
+  }
+
+  function toggleSaved(item, prompt) {
+    const key = promptKey(item, prompt);
+    const next = saved.includes(key) ? saved.filter((value) => value !== key) : [...saved, key];
+    try {
+      window.localStorage.setItem(savedKey, JSON.stringify(next));
+      setSaved(next);
+      setSaveError('');
+    } catch {
+      setSaveError("Couldn't save that. Allow this site to store data in your browser, then try again.");
+    }
+  }
+
+  function openPrompt(prompt, event, item = mode) {
     openedCard.current = event.currentTarget;
-    history.pushState({ mode: mode.id, show: true }, '', location.pathname);
-    setSelection({ mode, prompt, rect: event.currentTarget.getBoundingClientRect() });
+    history.pushState({ mode: item.id, saved: savedPage, show: true }, '', location.pathname);
+    setSelection({ mode: item, prompt, rect: event.currentTarget.getBoundingClientRect() });
   }
 
   function closePrompt() {
@@ -130,7 +176,7 @@ export default function App() {
   }
 
   function respond(value) {
-    history.replaceState({ mode: mode.id, result: true }, '', location.pathname);
+    history.replaceState({ mode: selection.mode.id, saved: savedPage, result: true }, '', location.pathname);
     setSelection(null);
     setAnswer(value);
   }
@@ -144,7 +190,18 @@ export default function App() {
 
   return <>
     <div className="shell" inert={hasOverlay} aria-hidden={hasOverlay || undefined}>
-      {!mode ? <main className="home">
+      {saveError && <p className="save-error" role="alert">{saveError}</p>}
+      {savedPage ? <main className="deck-page saved-page">
+        <header className="deck-header"><button className="back-button" onClick={home} aria-label="Back to intentions"><Icon name="back" /></button><h1 ref={heading} tabIndex={-1}>Saved</h1></header>
+        <p className="saved-note">Saved in this browser.</p>
+        {saved.length === 0 || !modes.some((item) => item.prompts.some((prompt) => saved.includes(promptKey(item, prompt))))
+          ? <p className="saved-empty">Your saved prompts are looking lonely.</p>
+          : <div className="deck" aria-label="Saved prompts">
+            {modes.flatMap((item) => item.prompts.map((prompt, index) => saved.includes(promptKey(item, prompt))
+              ? <PromptCard key={promptKey(item, prompt)} mode={item} prompt={prompt} index={index} saved onToggle={toggleSaved} onOpen={openPrompt} />
+              : null))}
+          </div>}
+      </main> : !mode ? <main className="home">
         <header><p className="wordmark">SHOT</p><h1>Don't know what to say?<br />Show them.</h1></header>
         <div className="modes">
           {modes.map((item) => <button key={item.id} className="mode-card" style={{ '--mode-color': item.color }} onClick={() => chooseMode(item)}>
@@ -154,15 +211,11 @@ export default function App() {
       </main> : <main className="deck-page" style={{ '--mode-color': mode.color }}>
         <header className="deck-header"><button className="back-button" onClick={home} aria-label="Back to intentions"><Icon name="back" /></button><h1 ref={heading} tabIndex={-1}>{mode.name}</h1></header>
         <div className="deck" ref={deck} aria-label={`${mode.name} prompts`} key={mode.id}>
-          {mode.prompts.map((prompt, index) => <button key={prompt.text} className="prompt-card" onClick={(event) => openPrompt(prompt, event)} aria-label={`Show prompt ${index + 1}: ${prompt.text}`}>
-            <div className="card-header"><span>{mode.name}</span><span>{index + 1} / 5</span></div>
-            <p className={`prompt-text ${typeSize(prompt.text)}`}>{prompt.text}</p>
-            <span className="tap-label">Tap to show</span>
-          </button>)}
+          {mode.prompts.map((prompt, index) => <PromptCard key={prompt.text} mode={mode} prompt={prompt} index={index} saved={saved.includes(promptKey(mode, prompt))} onToggle={toggleSaved} onOpen={openPrompt} />)}
           <PremiumPreview mode={mode} onLater={returnToFreeDeck} />
         </div>
       </main>}
-      <Navigation onHome={home} />
+      <Navigation onHome={home} onSaved={showSaved} savedPage={savedPage} />
     </div>
     {selection && <Presentation selection={selection} onClose={closePrompt} onAnswer={respond} />}
     {answer && <main className="result" aria-label={`${answer === 'yes' ? 'Positive' : 'Negative'} response`}>

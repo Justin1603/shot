@@ -51,8 +51,8 @@ try {
     const premium = page.getByRole('region', { name: 'Premium preview', exact: true });
     await premium.scrollIntoViewIfNeeded({ timeout: 5000 });
     await premium.getByRole('heading', { name: "You've got more shots to take.", exact: true }).waitFor();
-    assert.equal(await premium.getByText('Unlock the full deck.', { exact: true }).count(), 1);
-    assert.ok(await premium.getByRole('button', { name: 'Unlock Premium', exact: true }).isDisabled(), 'Premium purchasing stays unavailable');
+    assert.equal(await premium.getByText('Premium · coming soon', { exact: true }).count(), 1);
+    assert.equal(await premium.getByRole('button', { name: 'Unlock Premium', exact: true }).count(), 0, 'No purchase action');
     assert.equal(await page.getByRole('button', { name: /^Show prompt / }).count(), 5, 'Only five prompts can be opened');
     if (!modeIndex) await screenshot('premium-mobile');
     await premium.getByRole('button', { name: 'Maybe later', exact: true }).click();

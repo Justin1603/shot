@@ -9,7 +9,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "deploy": "npx @convex-dev/static-hosting deploy",
     "check": "tsc --noEmit -p convex/tsconfig.json",
-    "test": "node scripts/check-core-flow.mjs"
+    "test": "node scripts/check-core-flow.mjs && node scripts/check-saved.mjs"
   },
   "keywords": [],
   "author": "",
