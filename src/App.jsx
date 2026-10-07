@@ -77,7 +77,7 @@ function PromptCard({ mode, prompt, index, saved, onToggle, onOpen }) {
   </div>;
 }
 
-function PremiumPreview({ mode, onLater }) {
+function PremiumPreview({ mode, onLater, onOpen }) {
   return <section className="premium-preview" aria-label="Premium preview">
     <div className="premium-stack" aria-hidden="true">
       <div className="premium-layer premium-layer-back" />
@@ -87,6 +87,7 @@ function PremiumPreview({ mode, onLater }) {
     <h2>You've got more shots to take.</h2>
     <p className="premium-copy">Premium · coming soon</p>
     <div className="premium-actions">
+      <button className="pill premium-unlock" onClick={onOpen}>Unlock Premium</button>
       <button className="pill" onClick={onLater}>Maybe later</button>
     </div>
   </section>;
@@ -99,11 +100,14 @@ export default function App() {
   const [saveError, setSaveError] = useState('');
   const [selection, setSelection] = useState(null);
   const [answer, setAnswer] = useState(null);
+  const [premiumOpen, setPremiumOpen] = useState(false);
+  const premiumHeading = useRef(null);
+  const premiumTrigger = useRef(null);
   const deck = useRef(null);
   const openedCard = useRef(null);
   const heading = useRef(null);
   const resultHeading = useRef(null);
-  const hasOverlay = Boolean(selection || answer);
+  const hasOverlay = Boolean(selection || answer || premiumOpen);
 
   useEffect(() => {
     document.body.style.overflow = hasOverlay ? 'hidden' : '';
@@ -115,17 +119,23 @@ export default function App() {
     const back = (event) => {
       setMode(modes.find((item) => item.id === event.state?.mode) ?? null);
       setSavedPage(Boolean(event.state?.saved));
+      setPremiumOpen(Boolean(event.state?.premium));
       setSelection(null);
       setAnswer(null);
       if (selection && (event.state?.mode || event.state?.saved)) requestAnimationFrame(() => openedCard.current?.focus({ preventScroll: true }));
     };
     const escape = (event) => {
-      if (event.key === 'Escape' && selection) history.back();
+      if (event.key === 'Escape' && (selection || premiumOpen)) history.back();
     };
     window.addEventListener('popstate', back);
     window.addEventListener('keydown', escape);
     return () => { window.removeEventListener('popstate', back); window.removeEventListener('keydown', escape); };
-  }, [selection]);
+  }, [selection, premiumOpen]);
+
+  useEffect(() => {
+    if (premiumOpen) premiumHeading.current?.focus({ preventScroll: true });
+    else premiumTrigger.current?.focus({ preventScroll: true });
+  }, [premiumOpen]);
 
   useEffect(() => {
     if ((mode || savedPage) && !hasOverlay) heading.current?.focus({ preventScroll: true });
@@ -188,6 +198,12 @@ export default function App() {
     lastCard?.focus({ preventScroll: true });
   }
 
+  function openPremium(event) {
+    premiumTrigger.current = event.currentTarget;
+    history.pushState({ mode: mode.id, premium: true }, '', location.pathname);
+    setPremiumOpen(true);
+  }
+
   return <>
     <div className="shell" inert={hasOverlay} aria-hidden={hasOverlay || undefined}>
       {saveError && <p className="save-error" role="alert">{saveError}</p>}
@@ -212,12 +228,15 @@ export default function App() {
         <header className="deck-header"><button className="back-button" onClick={home} aria-label="Back to intentions"><Icon name="back" /></button><h1 ref={heading} tabIndex={-1}>{mode.name}</h1></header>
         <div className="deck" ref={deck} aria-label={`${mode.name} prompts`} key={mode.id}>
           {mode.prompts.map((prompt, index) => <PromptCard key={prompt.text} mode={mode} prompt={prompt} index={index} saved={saved.includes(promptKey(mode, prompt))} onToggle={toggleSaved} onOpen={openPrompt} />)}
-          <PremiumPreview mode={mode} onLater={returnToFreeDeck} />
+          <PremiumPreview mode={mode} onLater={returnToFreeDeck} onOpen={openPremium} />
         </div>
       </main>}
       <Navigation onHome={home} onSaved={showSaved} savedPage={savedPage} />
     </div>
     {selection && <Presentation selection={selection} onClose={closePrompt} onAnswer={respond} />}
+    {premiumOpen && <main className="result" aria-label="Premium coming soon">
+      <div className="result-inner"><h1 ref={premiumHeading} tabIndex={-1}>Premium · coming soon</h1><button className="pill done" onClick={() => history.back()}>Back to deck</button></div>
+    </main>}
     {answer && <main className="result" aria-label={`${answer === 'yes' ? 'Positive' : 'Negative'} response`}>
       <div className="result-inner"><h1 ref={resultHeading} tabIndex={-1}>{answer === 'yes' ? 'Well… looks like it’s your move now 👀' : 'Respect. We pretend this never happened 🤝'}</h1><button className="pill done" onClick={home}>Done</button></div>
     </main>}
