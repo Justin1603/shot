@@ -5,6 +5,7 @@ import Intro from './Intro.jsx';
 const completedKey = 'shot.intro.complete.v1';
 
 function hasCompletedIntro() {
+  if (new URLSearchParams(window.location.search).has('intro')) return false;
   try { return window.localStorage.getItem(completedKey) === '1'; }
   catch { return false; }
 }

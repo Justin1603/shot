@@ -56,6 +56,13 @@ try {
     await page.reload();
     await page.getByRole('button', { name: "Make a move Let them know you're interested.", exact: true }).waitFor();
     assert.equal(await page.getByRole('main', { name: 'SHOT splash', exact: true }).count(), 0, 'Returning visits bypass the completed introduction');
+    await page.goto(`${origin}/?intro`);
+    await walkIntro(page);
+    await page.reload();
+    await walkIntro(page);
+    await page.goto(origin);
+    await page.getByRole('button', { name: "Make a move Let them know you're interested.", exact: true }).waitFor();
+    assert.equal(await page.getByRole('main', { name: 'SHOT splash', exact: true }).count(), 0, 'Normal visits still bypass the introduction after the override');
     await page.goto(`${origin}/start`);
     await page.getByRole('link', { name: 'Try SHOT', exact: true }).waitFor();
     await context.close();
