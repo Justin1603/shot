@@ -30,7 +30,8 @@ async function walkIntro(page, captureName, width) {
     await title.waitFor();
     for (const line of supportingCopy[step]) await page.getByText(line, { exact: true }).waitFor();
     assert.equal(await page.getByRole('navigation').count(), 0, 'Existing navigation stays off the new screens');
-    assert.equal(await page.getByRole('button').count(), 1);
+    assert.equal(await page.getByRole('button').count(), 2);
+    await page.getByRole('button', { name: 'Skip', exact: true }).waitFor();
     assert.equal(await title.evaluate((element) => element === document.activeElement), true, 'The new screen receives keyboard focus');
     if (width) assert.ok(await page.evaluate(() => document.documentElement.scrollWidth) <= width, 'No horizontal overflow');
     if (captureName) await page.screenshot({ path: `.impeccable/review/intro-${step + 1}-${captureName}.png`, fullPage: true, animations: 'disabled' });
@@ -41,6 +42,22 @@ async function walkIntro(page, captureName, width) {
 }
 
 try {
+  for (let step = 0; step < 4; step++) {
+    const context = await browser.newContext({ viewport: { width: 320, height: 568 } });
+    const page = await context.newPage();
+    await page.goto(origin);
+    await page.getByRole('heading', { name: headings[0], exact: true }).waitFor();
+    for (let i = 0; i < step; i++) await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    await page.getByRole('button', { name: "Make a move Let them know you're interested.", exact: true }).waitFor();
+    assert.equal(await page.getByRole('heading', { level: 2 }).count(), 6);
+    await page.reload();
+    await page.getByRole('button', { name: 'Saved', exact: true }).waitFor();
+    assert.equal(await page.getByRole('main', { name: 'SHOT walkthrough' }).count(), 0, 'Skipping is remembered');
+    await page.goto(`${origin}/?intro`);
+    await page.getByRole('button', { name: 'Skip', exact: true }).waitFor();
+    await context.close();
+  }
   for (const [name, width, height] of [['mobile', 390, 844], ['small-phone', 320, 568], ['desktop', 1440, 1000]]) {
     const context = await browser.newContext({ viewport: { width, height }, isMobile: name !== 'desktop', hasTouch: name !== 'desktop', reducedMotion: 'reduce' });
     const page = await context.newPage();

@@ -50,7 +50,7 @@ export default function Intro({ onComplete }) {
   const last = step === screens.length - 1;
 
   return <main className="shot-intro" aria-label="SHOT walkthrough">
-    <header className="shot-intro-header"><p className="wordmark">SHOT</p></header>
+    <header className="shot-intro-header"><p className="wordmark">SHOT</p><button className="shot-intro-skip" onClick={onComplete}>Skip</button></header>
     <div className="shot-intro-content" key={step}>
       <h1 ref={heading} tabIndex={-1}>{screen.heading}</h1>
       {screen.reveal && <p className="shot-intro-reveal">{screen.reveal}</p>}

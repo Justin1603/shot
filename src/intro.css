@@ -1,5 +1,7 @@
 .shot-intro { display: flex; flex-direction: column; max-width: 540px; min-height: 100dvh; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 28px max(28px, env(safe-area-inset-bottom)); color: #171717; background: #FFFDF7; }
 .shot-intro .shot-intro-header .wordmark { margin-bottom: 0; }
+.shot-intro .shot-intro-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.shot-intro .shot-intro-skip { min-width: 44px; min-height: 44px; padding: 10px; margin-right: -10px; border-radius: 100px; background: transparent; font-size: 16px; font-weight: 600; }
 .shot-intro .shot-intro-content { margin-top: auto; margin-bottom: auto; padding: 72px 0; }
 .shot-intro h1 { font-size: 32px; line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
 .shot-intro h1:focus { outline: none; }
