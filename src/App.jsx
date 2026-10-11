@@ -69,7 +69,7 @@ function PromptCard({ mode, prompt, index, saved, onToggle, onOpen }) {
     <button className="prompt-card" onClick={(event) => onOpen(prompt, event, mode)} aria-label={`Show prompt ${index + 1}: ${prompt.text}`}>
       <div className="card-header"><span>{mode.name}</span></div>
       <p className={`prompt-text ${typeSize(prompt.text)}`}>{prompt.text}</p>
-      <div className="card-footer"><span className="tap-label">Tap to show</span><span className="card-counter">{index + 1} / 5</span></div>
+      <div className="card-footer"><span className="tap-label">Tap to show</span><span className="card-counter">{index + 1} / {mode.prompts.length}</span></div>
     </button>
     <button className="save-button" aria-label={`${saved ? 'Unsave' : 'Save'} prompt: ${prompt.text}`} aria-pressed={saved} onClick={() => onToggle(mode, prompt)}>
       <svg className="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5 3.8 12.4C-1 7.6 5.7 1 12 6.7c6.3-5.7 13 .9 8.2 5.7Z" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" /></svg>

@@ -63,12 +63,12 @@ try {
     await premium.getByRole('button', { name: 'Unlock Premium', exact: true }).click();
     await page.goBack();
     await premium.getByRole('button', { name: 'Unlock Premium', exact: true }).waitFor();
-    assert.equal(await page.getByRole('button', { name: /^Show prompt / }).count(), 5, 'Only five prompts can be opened');
+    assert.equal(await page.getByRole('button', { name: /^Show prompt / }).count(), mode.prompts.length, 'All free prompts can be opened');
     if (!modeIndex) await screenshot('premium-mobile');
     await premium.getByRole('button', { name: 'Maybe later', exact: true }).click();
-    const fifthCard = page.getByRole('button', { name: `Show prompt 5: ${mode.prompts[4].text}`, exact: true });
+    const fifthCard = page.getByRole('button', { name: `Show prompt ${mode.prompts.length}: ${mode.prompts.at(-1).text}`, exact: true });
     const fifthBounds = await fifthCard.boundingBox();
-    assert.ok(fifthBounds.y >= 0 && fifthBounds.y + fifthBounds.height <= 844, 'Maybe later returns to the fifth free prompt');
+    assert.ok(fifthBounds.y >= 0 && fifthBounds.y + fifthBounds.height <= 844, 'Maybe later returns to the last free prompt');
     // Scroll backward, then complete both possible answers.
     const firstCard = page.getByRole('button', { name: `Show prompt 1: ${mode.prompts[0].text}`, exact: true });
     for (const [answer, text] of [
@@ -122,7 +122,7 @@ try {
   await screenshot('premium-coming-soon-desktop');
   await page.getByRole('button', { name: 'Back to deck', exact: true }).click();
   assert.deepEqual(failures, [], 'No browser errors or failed assets');
-  console.log(`PASS ${url}: six intentions, all 30 free prompts, locked sixth previews, Maybe later, close/back, both answers, Done, and small-phone layout.`);
+  console.log(`PASS ${url}: six intentions, all ${modes.reduce((total, mode) => total + mode.prompts.length, 0)} free prompts, Premium previews, Maybe later, close/back, both answers, Done, and small-phone layout.`);
 } finally {
   await browser.close();
 }

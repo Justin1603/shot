@@ -23,6 +23,7 @@ export const modes = [
       prompt('You’re making it very hard to act casual. Can we talk?', 'YES, LET’S TALK'),
       prompt('Can I make you smile, or should I keep practising?', 'YES, GIVE IT A SHOT'),
       prompt('I think we’d make a good coffee date. Want to test that theory?'),
+      prompt('Are you today’s date? Because you’re definitely a 11/10', 'YOU’RE SMOOTH'),
     ],
   },
   {
